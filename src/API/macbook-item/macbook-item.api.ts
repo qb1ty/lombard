@@ -4,7 +4,6 @@ import type { MacbookTypes } from "@/entities/ITEMS/macbook-item/types/macbook-i
 
 export const getMacbookItems = async (subName: SubNames) => {
     try {
-        console.log(`https://28f0e5dd05d79217.mokky.dev/macbook-items?subName=${subName}`)
         const response = await axios.get<MacbookTypes[]>(`https://28f0e5dd05d79217.mokky.dev/macbook-items?subName=${subName}`)
         return response.data
     } catch (err) {

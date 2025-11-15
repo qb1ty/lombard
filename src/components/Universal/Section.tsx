@@ -8,37 +8,48 @@ interface ISection<T, K> {
     isEnabled: boolean
     datas: K[]
     field: keyof K
-    priceKey: keyof K
     titleObj: Record<keyof T, string>
     checkedObj: Record<keyof T, boolean>
     setChecked: React.Dispatch<React.SetStateAction<Record<keyof T, boolean>>>
-    setTotal: React.Dispatch<React.SetStateAction<number>>
+    setFixed: React.Dispatch<React.SetStateAction<number[]>>
+    setPrecents: React.Dispatch<React.SetStateAction<number[]>>
     toggleChecked: <T extends object>(key: keyof T, setState: React.Dispatch<React.SetStateAction<Record<keyof T, boolean>>>) => void
 }
 
-export default function Section<T extends object, K extends object>({ title, isEnabled, datas, field, priceKey, titleObj, checkedObj, setChecked, setTotal, toggleChecked }: ISection<T, K>) {
-    const total = datas.reduce((acc, item) => {
-        const entries = Object.entries(item[field] as Record<keyof T, number>) as [keyof T, number][]
-        let sectionSum = 0
-
-        for (const [key, value] of entries) {
-            if (!checkedObj[key]) continue
-
-            const basePrice = +item[priceKey]
-
-            if (value > 0 && value < 2) {
-                sectionSum += -basePrice * value
-            } else if (value >= 2 || value <= -1) {
-                sectionSum += value
-            }
-        }
-
-        return acc + sectionSum
-    }, 0)
-
+export default function Section<T extends object, K extends object>({
+    title,
+    isEnabled,
+    datas,
+    field,
+    titleObj,
+    checkedObj,
+    setChecked,
+    setFixed,
+    setPrecents,
+    toggleChecked
+}: ISection<T, K>) {
     useEffect(() => {
-        setTotal(total)
-    }, [total])
+        const fixedToAdd: number[] = []
+        const percentsToAdd: number[] = []
+    
+        datas.forEach(item => {
+            const entries = Object.entries(item[field] as Record<keyof T, number>) as [keyof T, number][]
+    
+            for (const [key, value] of entries) {
+                if (!checkedObj[key]) continue
+                const numValue = +value
+    
+                if (numValue <= 0 || numValue >= 2) {
+                    fixedToAdd.push(numValue)
+                } else if (numValue > 0 && numValue < 2) {
+                    percentsToAdd.push(numValue)
+                }
+            }
+        })
+
+        setFixed(fixedToAdd)
+        setPrecents(percentsToAdd)
+    }, [checkedObj, datas, field, setFixed, setPrecents])
 
     return (
         <div className="flex flex-col items-start w-full">
@@ -49,7 +60,7 @@ export default function Section<T extends object, K extends object>({ title, isE
                     const title = titleObj[keyTyped]
 
                     const isBigNegative = value < -10000000000000
-                    const isPrecent = value > 0 && value < 1
+                    const isPrecent = value > 0 && value < 2
 
                     return (
                         <div key={`PLAYSTATION-SECTION-${key}`} className="flex flex-row justify-between items-center w-full">

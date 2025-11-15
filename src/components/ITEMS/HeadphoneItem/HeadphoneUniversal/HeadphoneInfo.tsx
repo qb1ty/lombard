@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getHeadphoneItem } from "@/API/headphone-item/headphone-item.api"
 import { HEADPHONE_DEFECTS_CHECKED, HEADPHONE_EQUIPMENT_CHECKED, HEADPHONE_EQUIPMENT_TITLE, HEADPHONE_DEFECTS_TITLE } from "@/entities/ITEMS/headphone-item/constants/headphone-item.constant"
@@ -11,8 +11,13 @@ interface IHeadphoneInfo {
 }
 
 export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphoneInfo) {
-    const [totalEquipment, setTotalEquipment] = useState<number>(0)
-    const [totalDefects, setTotalDefects] = useState<number>(0)
+    const [equipmentFixed, setEquipmentFixed] = useState<number[]>([])
+    const [defectsFixed, setDefectsFixed] = useState<number[]>([])
+    const [equipmentPercents, setEquipmentPercents] = useState<number[]>([])
+    const [defectsPercents, setDefectsPercents] = useState<number[]>([])
+
+    const [allFixed, setAllFixed] = useState<number[]>([])
+    const [allPercents, setAllPercents] = useState<number[]>([])
 
     const [equipmentChecked, setEquipmentChecked] =
         useState<Record<keyof HeadphoneEquipment, boolean>>(HEADPHONE_EQUIPMENT_CHECKED)
@@ -36,6 +41,14 @@ export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphon
         }))
     }
 
+    useEffect(() => {
+        setAllFixed([...equipmentFixed, ...defectsFixed])
+    }, [equipmentFixed, defectsFixed])
+
+    useEffect(() => {
+        setAllPercents([...equipmentPercents, ...defectsPercents])
+    }, [equipmentPercents, defectsPercents])
+
     return (
         <div className="flex flex-col items-start gap-4 w-full">
             <Section<HeadphoneEquipment, HeadphoneTypes>
@@ -43,11 +56,11 @@ export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphon
                 isEnabled={isEnabled}
                 datas={headphoneItem}
                 field="equipment"
-                priceKey="price"
                 titleObj={HEADPHONE_EQUIPMENT_TITLE}
                 checkedObj={equipmentChecked}
                 setChecked={setEquipmentChecked}
-                setTotal={setTotalEquipment}
+                setFixed={setEquipmentFixed}
+                setPrecents={setEquipmentPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -56,11 +69,11 @@ export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphon
                 isEnabled={isEnabled}
                 datas={headphoneItem}
                 field="defects"
-                priceKey="price"
                 titleObj={HEADPHONE_DEFECTS_TITLE}
                 checkedObj={defectsChecked}
                 setChecked={setDefectsChecked}
-                setTotal={setTotalDefects}
+                setFixed={setDefectsFixed}
+                setPrecents={setDefectsPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -69,10 +82,10 @@ export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphon
                 fieldKey="price"
                 idKey="id"
                 isEnabled={isEnabled}
-                totalEquipment={totalEquipment}
-                totalDefects={totalDefects}
                 countGameDiscs={0}
                 isSell={isSell}
+                fixed={allFixed}
+                precents={allPercents}
             />
         </div>
     )

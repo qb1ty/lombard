@@ -9,8 +9,6 @@ interface IWatchInstallment {
 }
 
 export default function WatchInstallment({ watchID, datas, setWatchID }: IWatchInstallment) {
-    console.log(watchID)
-
     return (
         <div className="flex flex-col gap-2">
             <div className="w-full py-2">

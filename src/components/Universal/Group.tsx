@@ -41,7 +41,9 @@ export default function Group<T extends {}>({ datas, sectionKey, title, keyRadio
                 <div className="space-y-2 w-full">
                     {Object.entries(options).map(([key, discount]) => {
                         const discountStr = String(discount)
-                        const color = +discount >= 1 ? "text-green-600" : "text-red-600"
+                        const textStyle = +discount >= 1 ? "text-green-600 font-semibold" : +discount === 0 ? "text-black" : "text-red-600 font-semibold"
+                        const isBigNegative = +discountStr < -10000000000000
+                        const isPrecent = +discountStr > 0 && +discountStr < 2
 
                         return (
                             <div className="flex flex-row justify-between items-center gap-2 cursor-pointer w-full">
@@ -55,7 +57,7 @@ export default function Group<T extends {}>({ datas, sectionKey, title, keyRadio
                                         handleChage={() => handleRadioChange(key, discountStr)}
                                     />
                                 </div>
-                                {discount && <span className={`${color} font-semibold`}>{FLOAT_TO_PRECENT[discountStr]}</span>}
+                                <span className={`${textStyle}`}>{isBigNegative ? "Не принимаем" : isPrecent ? FLOAT_TO_PRECENT[discountStr] : discountStr}</span>
                             </div>
                         )
                     })}

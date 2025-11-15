@@ -9,8 +9,6 @@ interface IHeadphoneInstallment {
 }
 
 export default function HeadphoneInstallment({ headphoneID, datas, setHeadphoneID }: IHeadphoneInstallment) {
-    console.log(headphoneID)
-
     return (
         <div className="flex flex-col gap-2">
             <div className="w-full gap-2">

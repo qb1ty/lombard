@@ -3,41 +3,55 @@ interface IResult<T> {
     fieldKey: keyof T
     idKey: keyof T
     isEnabled: boolean
-    totalEquipment: number
-    totalDefects: number
     countGameDiscs: number
     isSell: boolean
-    precents?: number[]
+    fixed: number[]
+    precents: number[]
 }
 
-export default function Result<T extends {}>({ datas, fieldKey, idKey, isEnabled, totalEquipment, totalDefects, countGameDiscs, isSell, precents = [0] }: IResult<T>) {
+export default function Result<T extends {}>({ datas, fieldKey, idKey, isEnabled, countGameDiscs, isSell, fixed = [], precents = [] }: IResult<T>) {
     if (!isEnabled) return <></>
 
     return (
-        <div className="fixed left-4 bottom-4 w-full py-2">
+        <div className="fixed left-4 bottom-4 w-full">
             <div className="flex flex-row justify-between items-center w-full">
                 {datas.map(item => {
-                    const price: number = isSell ? Math.round(+item[fieldKey] * 1.10) : +item[fieldKey]
-                    const sum: number = (+totalEquipment + +totalDefects + price) + (3000 * +countGameDiscs)
-                    const allSum = precents.filter(val => val !== 0).reduce((acc, val) => {
-                        if (val > 0 && val < 2) {
-                            return acc * val
+                    const basePrice = +item[fieldKey]
+                    const priceWithSell = isSell ? Math.round(basePrice * 1.10) : basePrice
+                    let sum = priceWithSell + (3000 * countGameDiscs)
+                    const formula = []
+                    formula.push(sum)
+
+                    const multipliers = precents.map(value => value < 1 ? (1 - value) : value)
+
+                    precents.forEach(value => {
+                        if (value === 0) return
+
+                        const percentNum = value < 1 ? Math.round(value * 100) : Math.round((value - 1) * 100)
+                        const percentDisplay = value < 1 ? `-${percentNum}%` : `+${percentNum}%`
+                        formula.push(percentDisplay)
+                    })
+
+                    multipliers.forEach(mul => sum = Math.round(sum * mul))
+                    fixed.forEach(value => {
+                        if (value !== 0) {
+                            formula.push(value > 0 ? `+${value}` : `${value}`);
                         }
 
-                        return acc += val
-                    }, sum)
-                    const result = Math.round(allSum)
+                        sum += value
+                    })
 
+                    formula.push(`= ${sum}`)
+
+                    const result = formula.join(" ")
                     const isNegative = sum < 0
 
-                    console.log("PRICE: ", price, "SUM: ", sum, result)
-
                     return (
-                        <span key={`SUM-ALL-${item[idKey]}`} className="font-medium text-white text-base bg-black rounded-md py-2 px-4">Цена: {isNegative ? "Не принимаем" : result}</span>
+                        <span key={`SUM-ALL-${item[idKey]}`} className="flex flex-wrap items-center font-medium text-white text-base bg-black rounded-md py-2 px-2">Итого: {isNegative ? "Не принимаем" : result}</span>
                     )
                 })}
 
-                <p className="text-black text-md">{isSell && "Продажа +10%"}</p>
+                {isSell && <p className="bg-neutral-300 text-black text-md rounded-md py-2 px-4 mr-10">Продажа +10%</p>}
             </div>
         </div>
     )

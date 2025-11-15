@@ -11,13 +11,23 @@ interface IMacbookInfo {
 }
 
 export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo) {
-    const [totalEquipment, setTotalEquipment] = useState<number>(0)
-    const [totalDefects, setTotalDefects] = useState<number>(0)
-    const [processorPrecent, setProcessorPrecent] = useState<number>(0)
-    const [inchPrecent, setInchPrecent] = useState<number>(0)
-    const [SSDPrecent, setSSDProcent] = useState<number>(0)
-    const [RAMPrecent, setRAMPrecent] = useState<number>(0)
-    const [precents, setPrecents] = useState<number[]>([])
+    const [equipmentFixed, setEquipmentFixed] = useState<number[]>([])
+    const [defectsFixed, setDefectsFixed] = useState<number[]>([])
+    const [processorFixed, setProcessorFixed] = useState<number>(0)
+    const [inchFixed, setInchFixed] = useState<number>(0)
+    const [SSDFixed, setSSDFixed] = useState<number>(0)
+    const [RAMFixed, setRAMFixed] = useState<number>(0)
+
+    const [equipmentPercents, setEquipmentPercents] = useState<number[]>([])
+    const [defectsPercents, setDefectsPercents] = useState<number[]>([])
+    const [processorPercents, setProcessorPercents] = useState<number>(0)
+    const [inchPercents, setInchPercents] = useState<number>(0)
+    const [SSDPercents, setSSDPercents] = useState<number>(0)
+    const [RAMPercents, setRAMPercents] = useState<number>(0)
+
+
+    const [allFixed, setAllFixed] = useState<number[]>([])
+    const [allPercents, setAllPercents] = useState<number[]>([])
 
     const [equipmentChecked, setEquipmentChecked] =
         useState<Record<keyof MacbookEquipment, boolean>>(MACBOOK_EQUIPMENT_CHECKED)
@@ -25,7 +35,7 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
     const [defectsChecked, setDefectsChecked] =
         useState<Record<keyof MacbookDefects, boolean>>(MACBOOK_DEFECTS_CHECKED)
 
-     const { data: macbookItem = [], isEnabled } = useQuery({
+    const { data: macbookItem = [], isEnabled } = useQuery({
         queryKey: ["getMacbookItem", macbookID],
         queryFn: () => getMacbookItem(macbookID),
         enabled: !!macbookID
@@ -41,11 +51,33 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
         }))
     }
 
-    useEffect(() => {
-        setPrecents([processorPrecent, inchPrecent, SSDPrecent, RAMPrecent])
-    }, [processorPrecent, inchPrecent, SSDPrecent, RAMPrecent])
+    const handleGroupChange = (
+        value: number,
+        setPercent: React.Dispatch<React.SetStateAction<number>>,
+        setFixed: React.Dispatch<React.SetStateAction<number>>
+    ) => {
+        if (value > 0 && value < 2) {
+            setPercent(value)
+        } else {
+            setFixed(value)
+        }
+    }
 
-    console.log(precents)
+    useEffect(() => {
+        setAllFixed([
+            ...equipmentFixed,
+            ...defectsFixed,
+            processorFixed, inchFixed, SSDFixed, RAMFixed
+        ])
+    }, [equipmentFixed, defectsFixed, processorFixed, inchFixed, SSDFixed, RAMFixed])
+
+    useEffect(() => {
+        setAllPercents([
+            ...equipmentPercents,
+            ...defectsPercents,
+            processorPercents, inchPercents, SSDPercents, RAMPercents
+        ])
+    }, [equipmentPercents, defectsPercents, processorPercents, inchPercents, SSDPercents, RAMPercents])
 
     return (
         <div className="flex flex-col items-start gap-4 w-full">
@@ -55,7 +87,7 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 idKey="id"
                 title="Процессор"
                 keyRadioValue="MACBOOK-GROUP-PROCESSORS"
-                onChange={(selected) => setProcessorPrecent(+selected)}
+                onChange={(selected) => handleGroupChange(+selected, setProcessorPercents, setProcessorFixed)}
             />
 
             <Group<MacbookTypes>
@@ -64,7 +96,7 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 idKey="id"
                 title="Дюйм"
                 keyRadioValue="MACBOOK-GROUP-INCH"
-                onChange={(selected) => setInchPrecent(+selected)}
+                onChange={(selected) => handleGroupChange(+selected, setInchPercents, setInchFixed)}
             />
 
             <Group<MacbookTypes>
@@ -73,7 +105,7 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 idKey="id"
                 title="SSD"
                 keyRadioValue="MACBOOK-GROUP-SSD"
-                onChange={(selected) => setSSDProcent(+selected)}
+                onChange={(selected) => handleGroupChange(+selected, setSSDPercents, setSSDFixed)}
             />
 
             <Group<MacbookTypes>
@@ -82,7 +114,7 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 idKey="id"
                 title="ОЗУ"
                 keyRadioValue="MACBOOK-GROUP-RAM"
-                onChange={(selected) => setRAMPrecent(+selected)}
+                onChange={(selected) => handleGroupChange(+selected, setRAMPercents, setRAMFixed)}
             />
 
             <Section<MacbookEquipment, MacbookTypes>
@@ -90,11 +122,11 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 isEnabled={isEnabled}
                 datas={macbookItem}
                 field="equipment"
-                priceKey="price"
                 titleObj={MACBOOK_EQUIPMENT_TITLE}
                 checkedObj={equipmentChecked}
                 setChecked={setEquipmentChecked}
-                setTotal={setTotalEquipment}
+                setFixed={setEquipmentFixed}
+                setPrecents={setEquipmentPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -103,11 +135,11 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 isEnabled={isEnabled}
                 datas={macbookItem}
                 field="defects"
-                priceKey="price"
                 titleObj={MACBOOK_DEFECTS_TITLE}
                 checkedObj={defectsChecked}
                 setChecked={setDefectsChecked}
-                setTotal={setTotalDefects}
+                setFixed={setDefectsFixed}
+                setPrecents={setDefectsPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -116,11 +148,10 @@ export default function MacbookInfo({ macbookID, isSell = false }: IMacbookInfo)
                 fieldKey="price"
                 idKey="id"
                 isEnabled={isEnabled}
-                totalEquipment={totalEquipment}
-                totalDefects={totalDefects}
                 countGameDiscs={0}
                 isSell={isSell}
-                precents={precents}
+                fixed={allFixed}
+                precents={allPercents}
             />
         </div>
     )

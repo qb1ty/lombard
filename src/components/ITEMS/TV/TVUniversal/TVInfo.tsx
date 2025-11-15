@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { getTVItem } from "@/API/TV-item/TV-item.api"
 import { useQuery } from "@tanstack/react-query"
 import { TV_DEFECTS_CHECKED, TV_EQUIPMENT_CHECKED, TV_DEFECTS_TITLE, TV_EQUIPMENT_TITLE } from "@/entities/ITEMS/TV-item/constants/TV-item.constant"
@@ -11,8 +11,13 @@ interface ITVInfo {
 }
 
 export default function TVInfo({ tvID, isSell = false }: ITVInfo) {
-    const [totalEquipment, setTotalEquipment] = useState<number>(0)
-    const [totalDefects, setTotalDefects] = useState<number>(0)
+    const [equipmentFixed, setEquipmentFixed] = useState<number[]>([])
+    const [defectsFixed, setDefectsFixed] = useState<number[]>([])
+    const [equipmentPercents, setEquipmentPercents] = useState<number[]>([])
+    const [defectsPercents, setDefectsPercents] = useState<number[]>([])
+
+    const [allFixed, setAllFixed] = useState<number[]>([])
+    const [allPercents, setAllPercents] = useState<number[]>([])
 
     const [equipmentChecked, setEquipmentChecked] =
         useState<Record<keyof TVEquipment, boolean>>(TV_EQUIPMENT_CHECKED)
@@ -36,6 +41,14 @@ export default function TVInfo({ tvID, isSell = false }: ITVInfo) {
         }))
     }
 
+    useEffect(() => {
+        setAllFixed([...equipmentFixed, ...defectsFixed])
+    }, [equipmentFixed, defectsFixed])
+
+    useEffect(() => {
+        setAllPercents([...equipmentPercents, ...defectsPercents])
+    }, [equipmentPercents, defectsPercents])
+
     return (
         <div className="flex flex-col items-start gap-4 w-full">
             <Section<TVEquipment, TVTypes>
@@ -43,11 +56,11 @@ export default function TVInfo({ tvID, isSell = false }: ITVInfo) {
                 isEnabled={isEnabled}
                 datas={tvItem}
                 field="equipment"
-                priceKey="price"
                 titleObj={TV_EQUIPMENT_TITLE}
                 checkedObj={equipmentChecked}
                 setChecked={setEquipmentChecked}
-                setTotal={setTotalEquipment}
+                setFixed={setEquipmentFixed}
+                setPrecents={setEquipmentPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -56,11 +69,11 @@ export default function TVInfo({ tvID, isSell = false }: ITVInfo) {
                 isEnabled={isEnabled}
                 datas={tvItem}
                 field="defects"
-                priceKey="price"
                 titleObj={TV_DEFECTS_TITLE}
                 checkedObj={defectsChecked}
                 setChecked={setDefectsChecked}
-                setTotal={setTotalDefects}
+                setFixed={setDefectsFixed}
+                setPrecents={setDefectsPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -69,10 +82,10 @@ export default function TVInfo({ tvID, isSell = false }: ITVInfo) {
                 fieldKey="price"
                 idKey="id"
                 isEnabled={isEnabled}
-                totalEquipment={totalEquipment}
-                totalDefects={totalDefects}
                 countGameDiscs={0}
                 isSell={isSell}
+                fixed={allFixed}
+                precents={allPercents}
             />
         </div>
     )

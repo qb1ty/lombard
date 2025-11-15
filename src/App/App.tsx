@@ -16,6 +16,8 @@ import { Modes } from "@/components/Modes"
 import { Title } from "@/components/Title"
 import { MACBOOK_MODES } from "@/entities/ITEMS/macbook-item/constants/macbook-item.constant"
 import { MacbookItem } from "@/components/ITEMS/MacbookItem"
+import { PROCESSOR_MODES } from "@/entities/ITEMS/processor-item/constants/processor-item.constant"
+import { ProcessorItem } from "@/components/ITEMS/ProcessorItem"
 
 export default function App() {
   const [categoryId, setCategoryId] = useState<string>("")
@@ -26,8 +28,6 @@ export default function App() {
     setModesId("")
     setSubName("")
   }
-
-  console.log(`Имя сабкатегорий ${subName}`, `ID Категорий: ${categoryId}`, `ID Мода ${modesId}`)
 
   return (
     <div className="p-4 w-[700px] pb-32 font-montserrat bg-[#F3F3F3]">
@@ -45,6 +45,7 @@ export default function App() {
       { WATCH_MODES.includes(subName as any) && <WatchItem subName={subName} modesID={modesId} /> }
       { TV_MODES.includes(subName as any) && <TvItem subName={subName} modesID={modesId} /> }
       { MACBOOK_MODES.includes(subName as any) && <MacbookItem subName={subName} modesID={modesId} /> }
+      { PROCESSOR_MODES.includes(subName as any) && <ProcessorItem subName={subName} modesID={modesId} /> }
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { getPlayStationItem } from "@/API/playstation-item/playstation-item.api"
 import { PLAYSTATION_DEFECTS_TITLE, PLAYSTATION_EQUIPMENT_TITLE, PLAYSTATION_EQUIPMENT_CHECKED, PLAYSTATION_DEFECTS_CHECKED } from "@/entities/ITEMS/playstation-item/constants/playstation-item.constant"
@@ -13,8 +13,13 @@ interface IPlayStationInfo {
 
 export default function PlayStationInfo({ playStationID, isSell = false }: IPlayStationInfo) {
     const [countGameDiscs, setCountGameDiscs] = useState<number>(0)
-    const [totalEquipment, setTotalEquipment] = useState<number>(0)
-    const [totalDefects, setTotalDefects] = useState<number>(0)
+    const [equipmentFixed, setEquipmentFixed] = useState<number[]>([])
+    const [defectsFixed, setDefectsFixed] = useState<number[]>([])
+    const [equipmentPercents, setEquipmentPercents] = useState<number[]>([])
+    const [defectsPercents, setDefectsPercents] = useState<number[]>([])
+
+    const [allFixed, setAllFixed] = useState<number[]>([])
+    const [allPercents, setAllPercents] = useState<number[]>([])
 
     const [equipmentChecked, setEquipmentChecked] = 
         useState<Record<keyof PlayStationEquipment, boolean>>(PLAYSTATION_EQUIPMENT_CHECKED)
@@ -37,6 +42,14 @@ export default function PlayStationInfo({ playStationID, isSell = false }: IPlay
             [key]: !prev[key]
         }))
     }
+
+    useEffect(() => {
+        setAllFixed([...equipmentFixed, ...defectsFixed])
+    }, [equipmentFixed, defectsFixed])
+
+    useEffect(() => {
+        setAllPercents([...equipmentPercents, ...defectsPercents])
+    }, [equipmentPercents, defectsPercents])
     
     return (
         <div className="flex flex-col items-start gap-4 w-full">
@@ -56,11 +69,11 @@ export default function PlayStationInfo({ playStationID, isSell = false }: IPlay
                 isEnabled={isEnabled}
                 datas={playStationItem}
                 field="equipment"
-                priceKey="price"
                 titleObj={PLAYSTATION_EQUIPMENT_TITLE}
                 checkedObj={equipmentChecked}
                 setChecked={setEquipmentChecked}
-                setTotal={setTotalEquipment}
+                setFixed={setEquipmentFixed}
+                setPrecents={setEquipmentPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -69,11 +82,11 @@ export default function PlayStationInfo({ playStationID, isSell = false }: IPlay
                 isEnabled={isEnabled}
                 datas={playStationItem}
                 field="defects"
-                priceKey="price"
                 titleObj={PLAYSTATION_DEFECTS_TITLE}
                 checkedObj={defectsChecked}
                 setChecked={setDefectsChecked}
-                setTotal={setTotalDefects}
+                setFixed={setDefectsFixed}
+                setPrecents={setDefectsPercents}
                 toggleChecked={toggleChecked}
             />
 
@@ -82,10 +95,10 @@ export default function PlayStationInfo({ playStationID, isSell = false }: IPlay
                 fieldKey="price"
                 idKey="id"
                 isEnabled={isEnabled}
-                totalEquipment={totalEquipment}
-                totalDefects={totalDefects}
                 countGameDiscs={countGameDiscs}
                 isSell={isSell}
+                fixed={allFixed}
+                precents={allPercents}
             />
         </div>
     )

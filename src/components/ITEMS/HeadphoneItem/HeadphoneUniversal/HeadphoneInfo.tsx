@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getHeadphoneItem } from "@/API/headphone-item/headphone-item.api"
 import { HEADPHONE_DEFECTS_CHECKED, HEADPHONE_EQUIPMENT_CHECKED, HEADPHONE_EQUIPMENT_TITLE, HEADPHONE_DEFECTS_TITLE } from "@/entities/ITEMS/headphone-item/constants/headphone-item.constant"
 import type { HeadphoneDefects, HeadphoneEquipment, HeadphoneTypes } from "@/entities/ITEMS/headphone-item/types/headphone-item.types"
+import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
 import { Section, Result } from "@/components/Universal"
 
 interface IHeadphoneInfo {
@@ -31,15 +32,6 @@ export default function HeadphoneInfo({ headphoneID, isSell = false }: IHeadphon
         enabled: !!headphoneID
     })
 
-    const toggleChecked = <T extends object>(
-        key: keyof T,
-        setState: React.Dispatch<React.SetStateAction<Record<keyof T, boolean>>>
-    ): void => {
-        setState(prev => ({
-            ...prev,
-            [key]: !prev[key]
-        }))
-    }
 
     useEffect(() => {
         setAllFixed([...equipmentFixed, ...defectsFixed])

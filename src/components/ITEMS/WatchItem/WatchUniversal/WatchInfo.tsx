@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getWatchItem } from "@/API/watch-item/watch-item.api"
 import { WATCH_EQUIPMENT_TITLE, WATCH_DEFECTS_CHECKED, WATCH_EQUIPMENT_CHECKED, WATCH_DEFECTS_TITLE } from "@/entities/ITEMS/watch-item/constants/watch-item.constant"
 import type { WatchDefects, WatchEquipment, WatchTypes } from "@/entities/ITEMS/watch-item/types/watch-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Result, Section } from "@/components/Universal"
 
 interface IWatchInfo {

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getProcessorItem } from "@/API/processor-item/processor-item.api"
 import { PROCESSOR_DEFECTS_CHECKED, PROCESSOR_DEFECTS_TITLE, PROCESSOR_EQUIPMENT_CHECKED, PROCESSOR_EQUIPMENT_TITLE } from "@/entities/ITEMS/processor-item/constants/processor-item.constant"
 import type { ProcessorDefects, ProcessorEquipment, ProcessorTypes } from "@/entities/ITEMS/processor-item/types/processor-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Group, Result, Section } from "@/components/Universal"
 
 interface IProcessorInfo {

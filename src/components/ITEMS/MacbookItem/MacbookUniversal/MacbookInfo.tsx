@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getMacbookItem } from "@/API/macbook-item/macbook-item.api"
 import { MACBOOK_DEFECTS_CHECKED, MACBOOK_DEFECTS_TITLE, MACBOOK_EQUIPMENT_CHECKED, MACBOOK_EQUIPMENT_TITLE } from "@/entities/ITEMS/macbook-item/constants/macbook-item.constant"
 import type { MacbookDefects, MacbookEquipment, MacbookTypes } from "@/entities/ITEMS/macbook-item/types/macbook-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Group, Result, Section } from "@/components/Universal"
 
 interface IMacbookInfo {

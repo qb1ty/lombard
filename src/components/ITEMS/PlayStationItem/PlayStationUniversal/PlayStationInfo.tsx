@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getPlayStationItem } from "@/API/playstation-item/playstation-item.api"
 import { PLAYSTATION_DEFECTS_TITLE, PLAYSTATION_EQUIPMENT_TITLE, PLAYSTATION_EQUIPMENT_CHECKED, PLAYSTATION_DEFECTS_CHECKED } from "@/entities/ITEMS/playstation-item/constants/playstation-item.constant"
 import type { PlayStationDefects, PlayStationEquipment, PlayStationTypes } from "@/entities/ITEMS/playstation-item/types/playstation-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Section, Result } from "@/components/Universal"
 import { NumberInput } from "@/components/Form/Input"
 
@@ -34,6 +34,7 @@ export default function PlayStationInfo({ playStationID, isSell = false }: IPlay
         enabled: !!playStationID
     })
 
+  
     useEffect(() => {
         setAllFixed([...equipmentFixed, ...defectsFixed])
     }, [equipmentFixed, defectsFixed])

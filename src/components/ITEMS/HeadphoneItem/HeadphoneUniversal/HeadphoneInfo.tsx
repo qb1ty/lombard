@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 import { getHeadphoneItem } from "@/API/headphone-item/headphone-item.api"
 import { HEADPHONE_DEFECTS_CHECKED, HEADPHONE_EQUIPMENT_CHECKED, HEADPHONE_EQUIPMENT_TITLE, HEADPHONE_DEFECTS_TITLE } from "@/entities/ITEMS/headphone-item/constants/headphone-item.constant"
 import type { HeadphoneDefects, HeadphoneEquipment, HeadphoneTypes } from "@/entities/ITEMS/headphone-item/types/headphone-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Section, Result } from "@/components/Universal"
 
 interface IHeadphoneInfo {

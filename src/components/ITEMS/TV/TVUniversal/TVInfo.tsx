@@ -3,7 +3,7 @@ import { getTVItem } from "@/API/TV-item/TV-item.api"
 import { useQuery } from "@tanstack/react-query"
 import { TV_DEFECTS_CHECKED, TV_EQUIPMENT_CHECKED, TV_DEFECTS_TITLE, TV_EQUIPMENT_TITLE } from "@/entities/ITEMS/TV-item/constants/TV-item.constant"
 import type { TVDefects, TVEquipment, TVTypes } from "@/entities/ITEMS/TV-item/types/TV-item.types"
-import { toggleChecked } from "@/entities/universal/constants/utils/universal.utils"
+import { toggleChecked } from "@/entities/universal/utility/universal.utils"
 import { Result, Section } from "@/components/Universal"
 
 interface ITVInfo {

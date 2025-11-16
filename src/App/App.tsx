@@ -18,6 +18,8 @@ import { MACBOOK_MODES } from "@/entities/ITEMS/macbook-item/constants/macbook-i
 import { MacbookItem } from "@/components/ITEMS/MacbookItem"
 import { PROCESSOR_MODES } from "@/entities/ITEMS/processor-item/constants/processor-item.constant"
 import { ProcessorItem } from "@/components/ITEMS/ProcessorItem"
+import { PHONE_MODES } from "@/entities/ITEMS/phone-item/constants/phone-item.constants"
+import { PhoneItem } from "@/components/ITEMS/PhoneItem"
 
 export default function App() {
   const [categoryId, setCategoryId] = useState<string>("")
@@ -46,6 +48,7 @@ export default function App() {
       { TV_MODES.includes(subName as any) && <TvItem subName={subName} modesID={modesId} /> }
       { MACBOOK_MODES.includes(subName as any) && <MacbookItem subName={subName} modesID={modesId} /> }
       { PROCESSOR_MODES.includes(subName as any) && <ProcessorItem subName={subName} modesID={modesId} /> }
+      { PHONE_MODES.includes(subName as any) && <PhoneItem subName={subName} modesID={modesId} />}
     </div>
   )
 }
